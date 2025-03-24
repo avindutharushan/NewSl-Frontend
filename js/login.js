@@ -9,6 +9,7 @@ $(document).ready(function () {
     $("#login-tab").tab("show");
   });
 
+  // Login
   $("#login-form").submit(function (e) {
     e.preventDefault();
 
@@ -29,7 +30,10 @@ $(document).ready(function () {
         console.log("Login successful!", response);
 
         if (response.token) {
-          localStorage.setItem("authToken", response.token);
+          localStorage.setItem(
+            `authTokenNewSL-${response.username}`,
+            response.token
+          );
         }
 
         window.location.href = "index.html";
@@ -43,4 +47,6 @@ $(document).ready(function () {
       },
     });
   });
+
+  // Register
 });
