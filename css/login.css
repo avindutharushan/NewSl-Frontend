@@ -1,0 +1,126 @@
+.form-container {
+  background-color: #fff;
+  border-radius: 5px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  margin-bottom: 30px;
+}
+
+.auth-tabs {
+  margin-bottom: 25px;
+}
+
+.auth-tabs .nav-link {
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #6c757d;
+  border: none;
+  border-bottom: 3px solid transparent;
+  border-radius: 0;
+  padding: 10px 20px;
+}
+
+.auth-tabs .nav-link.active {
+  color: #333333;
+  border-bottom: 3px solid #333333;
+  background-color: transparent;
+}
+
+.form-title {
+  margin-bottom: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.btn-auth {
+  color: #fff;
+  background-color: #000000;
+  border: none;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 10px 25px;
+  margin-top: 10px;
+}
+
+.form-control {
+  height: 45px;
+  margin-bottom: 15px;
+}
+
+.social-login {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.social-login-title {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.social-login-title:before,
+.social-login-title:after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background-color: #dee2e6;
+}
+
+.social-login-title span {
+  padding: 0 15px;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.btn-social {
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  line-height: 40px;
+  margin: 0 5px;
+  color: #fff;
+}
+
+.btn-facebook {
+  background-color: #3b5998;
+}
+
+.btn-google {
+  background-color: #db4437;
+}
+
+.btn-twitter {
+  background-color: #1da1f2;
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: 20px;
+  color: #6c757d;
+}
+
+.auth-footer a {
+  color: gold;
+  font-weight: 600;
+}
+
+.forgot-password {
+  text-align: right;
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+.forgot-password a {
+  color: #6c757d;
+}
+
+.remember-me {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.remember-me input {
+  margin-right: 8px;
+}
