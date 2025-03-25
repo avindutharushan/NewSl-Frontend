@@ -277,42 +277,85 @@
             >
               <div class="form-container">
                 <h4 class="form-title">Create Your Account</h4>
-                <form>
-                  <div class="row">
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <input
-                          type="text"
-                          class="form-control"
-                          placeholder="First Name"
-                          required
+                <form id="register-form">
+                  <div class="form-group">
+                    <label for="profile-picture" class="profile-upload-label">
+                      <div class="profile-preview-container">
+                        <img
+                          id="profile-preview"
+                          src="/img/profile-icon-NewSL.jpg"
+                          alt="Profile Preview"
+                          class="profile-preview"
                         />
+                        <div class="overlay">
+                          <i class="fas fa-camera"></i>
+                          <span>Upload Photo</span>
+                        </div>
                       </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <input
-                          type="text"
-                          class="form-control"
-                          placeholder="Last Name"
-                          required
-                        />
-                      </div>
-                    </div>
+                    </label>
+                    <input
+                      type="file"
+                      id="profile-picture"
+                      name="profile-picture"
+                      accept="image/*"
+                      class="form-control-file"
+                      style="display: none"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="User Name"
+                      id="username"
+                      required
+                    />
                   </div>
                   <div class="form-group">
                     <input
                       type="email"
                       class="form-control"
                       placeholder="Email Address"
+                      id="email"
                       required
                     />
+                  </div>
+                  <div class="form-group user-type-selector">
+                    <label class="user-type-label">Login as:</label>
+                    <div class="user-type-options">
+                      <div class="user-type-option">
+                        <input
+                          type="radio"
+                          id="user-type-user"
+                          name="user-type"
+                          value="user"
+                          checked
+                        />
+                        <label for="user-type-user">
+                          <i class="fas fa-user"></i>
+                          <span>User</span>
+                        </label>
+                      </div>
+                      <div class="user-type-option">
+                        <input
+                          type="radio"
+                          id="user-type-reporter"
+                          name="user-type"
+                          value="reporter"
+                        />
+                        <label for="user-type-reporter">
+                          <i class="fas fa-newspaper"></i>
+                          <span>Reporter</span>
+                        </label>
+                      </div>
+                    </div>
                   </div>
                   <div class="form-group">
                     <input
                       type="password"
                       class="form-control"
                       placeholder="Password"
+                      id="password"
                       required
                     />
                   </div>
@@ -321,16 +364,11 @@
                       type="password"
                       class="form-control"
                       placeholder="Confirm Password"
+                      id="confirm-password"
                       required
                     />
                   </div>
-                  <div class="remember-me">
-                    <input type="checkbox" id="terms" required />
-                    <label for="terms"
-                      >I agree to the
-                      <a href="#">Terms and Conditions</a></label
-                    >
-                  </div>
+
                   <button
                     type="submit"
                     class="btn btn-primary btn-auth btn-block"
@@ -360,6 +398,56 @@
                   Already have an account?
                   <a class="text-secondary" href="#" id="showLogin">Login</a>
                 </div>
+              </div>
+            </div>
+            <!--OTP Verification -->
+            <div
+              id="otp-verification"
+              class="form-container"
+              style="display: none"
+            >
+              <h4 class="form-title">Verify Your Email</h4>
+              <p class="verification-text">
+                We've sent a verification code to your email address. Please
+                enter the code below to complete your registration.
+              </p>
+
+              <div class="otp-input-container">
+                <input type="text" class="otp-input" maxlength="1" autofocus />
+                <input type="text" class="otp-input" maxlength="1" />
+                <input type="text" class="otp-input" maxlength="1" />
+                <input type="text" class="otp-input" maxlength="1" />
+                <input type="text" class="otp-input" maxlength="1" />
+                <input type="text" class="otp-input" maxlength="1" />
+              </div>
+
+              <div
+                id="otp-error"
+                class="alert alert-danger mt-3"
+                style="display: none"
+              ></div>
+
+              <button
+                type="button"
+                id="verify-otp-btn"
+                class="btn btn-primary btn-auth btn-block mt-4"
+              >
+                Verify & Complete Registration
+              </button>
+
+              <div class="resend-timer mt-3 text-center">
+                <span>Didn't receive the code? </span>
+                <span id="timer">01:00</span>
+              </div>
+
+              <div class="resend-action text-center" style="display: none">
+                <a href="#" id="resend-otp">Resend Code</a>
+              </div>
+
+              <div class="auth-footer mt-4">
+                <a href="#" id="back-to-register" class="text-secondary">
+                  <i class="fas fa-arrow-left mr-1"></i> Back to Registration
+                </a>
               </div>
             </div>
           </div>
@@ -528,6 +616,7 @@
 
     <!-- JavaScript Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.bundle.min.js"></script>
     <script src="lib/easing/easing.min.js"></script>
     <script src="lib/owlcarousel/owl.carousel.min.js"></script>
