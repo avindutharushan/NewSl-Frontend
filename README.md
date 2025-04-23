@@ -4,7 +4,7 @@ This is a robust Spring Boot backend designed for a comprehensive news platform.
 
 ---
 ## 🎥 Demo Video
-📺 [Video]([https://youtu.be/your-video-link](https://www.youtube.com/watch?v=x4TEWn89nKQ))
+📺 [Video](https://www.youtube.com/watch?v=x4TEWn89nKQ))
 
 ## ⚙️ Setup Instructions
 
