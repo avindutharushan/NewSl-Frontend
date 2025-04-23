@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Article Section</title>
+    <link rel="stylesheet" href="/assets/select2/select2.min.css" />
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/assets/css/styles.css" />
+    <link rel="stylesheet" href="/components/css/popup/viewArticlePopup.css" />
+    <link
+      rel="stylesheet"
+      href="/components/css/popup/addOrUpdateArticlePopup.css"
+    />
+    <link
+      rel="stylesheet"
+      href="/components/css/popup/deleteConfirmationPopup.css"
+    />
+    <link rel="stylesheet" href="/components/css/section/articleSection.css" />
+  </head>
+  <body>
+    <div class="article-container">
+      <div class="article-header">
+        <h1 class="page-title">Article Details</h1>
+        <div class="header-buttons">
+          <button class="btn btn-popup-action" id="addBtn">Add</button>
+        </div>
+      </div>
+
+      <div class="search-section">
+        <div class="search-input">
+          <input type="text" placeholder="Search by title" id="searchTitle" />
+          <img
+            src="/assets/icons/search-icon.svg"
+            alt="search-icon"
+            class="search-icon"
+          />
+        </div>
+
+        <button class="search-btn" id="searchBtn">Search</button>
+      </div>
+
+      <div class="table-container">
+        <div class="row table-body" id="articleTableBody">
+          <!-- Table rows will be dynamically added here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Delete confirmation popup -->
+    <div class="delete-popup" id="deleteConfirmationPopup">
+      <div class="popup-header">
+        <div class="header-content">
+          <div class="header-icon">
+            <img
+              src="/assets/icons/delete-confirmation-popup-icon.svg"
+              alt="delete-icon"
+            />
+          </div>
+          <h1 class="header-title">Delete Confirmation</h1>
+        </div>
+        <button class="close-btn" id="closeDeletePopupBtn">
+          <img
+            src="/assets/icons/close-icon-black.svg"
+            alt="close-icon"
+            class="close-icon"
+          />
+        </button>
+      </div>
+      <div class="popup-content">
+        <p class="confirmation-text">
+          Do you really want to delete this article?<br />
+          This process cannot be undone.
+        </p>
+        <button class="confirm-btn" id="confirmDeleteBtn">CONFIRM</button>
+      </div>
+    </div>
+
+    <!-- Add or update article popup -->
+    <div class="add-article-popup" id="addArticlePopup">
+      <div class="popup-header">
+        <div class="header-content">
+          <div class="header-icon">
+            <img
+              src="/assets/icons/article-popup-icon.svg"
+              alt="article-icon"
+            />
+          </div>
+          <h1 class="header-title" id="popupTitle">Add Article</h1>
+        </div>
+        <button class="close-btn" id="closeBtn">
+          <img
+            src="/assets/icons/close-icon-black.svg"
+            alt="close-icon"
+            class="close-icon"
+          />
+        </button>
+      </div>
+      <div class="popup-content">
+        <form
+          id="addArticleForm"
+          class="article-form"
+          enctype="multipart/form-data"
+        >
+          <input type="hidden" id="actionType" value="add" />
+          <input type="hidden" id="articleId" name="id" />
+          <div class="form-container">
+            <div class="form-fields">
+              <div class="form-group">
+                <input
+                  type="text"
+                  id="title"
+                  name="title"
+                  placeholder="Article Title"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <div class="file-upload-container">
+                  <label for="coverImage" class="file-upload-label">
+                    Cover Image
+                    <input
+                      type="file"
+                      id="coverImage"
+                      name="coverImage"
+                      accept="image/*"
+                      class="file-upload-input"
+                    />
+                  </label>
+                  <span id="fileSelectedText">No file selected</span>
+                </div>
+              </div>
+            </div>
+            <div class="content-field">
+              <div class="form-group">
+                <textarea
+                  id="content"
+                  name="content"
+                  placeholder="Article content..."
+                  maxlength="2000"
+                  required
+                ></textarea>
+                <div class="char-count">
+                  <span id="currentCount">0</span>/2000
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="save-btn-container">
+            <button type="submit" class="save-btn" id="saveBtn">SAVE</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- View article popup -->
+    <div class="view-article-popup" id="viewArticlePopup">
+      <div class="popup-header">
+        <div class="header-content">
+          <div class="header-icon">
+            <img
+              src="/assets/icons/article-popup-icon.svg"
+              alt="article-icon"
+            />
+          </div>
+          <h1 class="header-title">View Article</h1>
+        </div>
+        <button class="close-btn" id="closeViewBtn">
+          <img
+            src="/assets/icons/close-icon-black.svg"
+            alt="close-icon"
+            class="close-icon"
+          />
+        </button>
+      </div>
+      <div class="popup-content">
+        <div class="article-details">
+          <div class="details-container">
+            <div class="cover-image-container">
+              <img id="viewCoverImage" alt="Cover Image" />
+            </div>
+            <div class="details-section">
+              <div class="details-row">
+                <label>Title:</label>
+                <span id="viewTitle"></span>
+              </div>
+              <div class="details-row">
+                <label>Reporter:</label>
+                <span id="viewReporter"></span>
+              </div>
+              <div class="details-row">
+                <label>Date:</label>
+                <span id="viewDate"></span>
+              </div>
+            </div>
+            <div class="content-field">
+              <div class="details-row content-row">
+                <label>Content:</label>
+                <div id="viewContent" class="article-content"></div>
+              </div>
+            </div>
+          </div>
+          <div class="button-container">
+            <button class="close-button" id="closeButton">CLOSE</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/assets/select2/select2.min.js"></script>
+    <script src="/lib/sweetalert2@11.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Get references to elements
+        const addBtn = document.getElementById("addBtn");
+        const addArticlePopup = document.getElementById("addArticlePopup");
+        const closeBtn = document.getElementById("closeBtn");
+        const coverImageInput = document.getElementById("coverImage");
+        const fileSelectedText = document.getElementById("fileSelectedText");
+        const contentTextarea = document.getElementById("content");
+        const currentCount = document.getElementById("currentCount");
+
+        // Handle file input change
+        coverImageInput.addEventListener("change", function () {
+          if (this.files && this.files[0]) {
+            fileSelectedText.textContent = this.files[0].name;
+          } else {
+            fileSelectedText.textContent = "No file selected";
+          }
+        });
+
+        // Character counter for content textarea
+        contentTextarea.addEventListener("input", function () {
+          const count = this.value.length;
+          currentCount.textContent = count;
+        });
+
+        // Function to open the add article popup
+        function openAddArticlePopup() {
+          const articleForm = document.getElementById("addArticleForm");
+          articleForm.reset();
+
+          document.getElementById("actionType").value = "add";
+          document.getElementById("popupTitle").textContent = "Add Article";
+          addArticlePopup.style.display = "block";
+
+          document.getElementById("title").value = "";
+          document.getElementById("content").value = "";
+          currentCount.textContent = "0";
+          fileSelectedText.textContent = "No file selected";
+
+          // Reset select2
+          $("#reporter").val(null).trigger("change");
+        }
+
+        // Function to close the add article popup
+        function closeAddArticlePopup() {
+          addArticlePopup.style.display = "none";
+        }
+
+        // Add form submit handler
+        document
+          .getElementById("addArticleForm")
+          .addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const formData = new FormData();
+            formData.append("reporter", $.cookie("username"));
+            formData.append("title", $("#title").val());
+            formData.append("content", $("#content").val());
+
+            const coverImage = document.getElementById("coverImage");
+            if (coverImage.files.length > 0) {
+              formData.append("coverImage", coverImage.files[0]);
+            }
+
+            const actionType = document.getElementById("actionType").value;
+            const endpoint =
+              actionType === "add"
+                ? "http://localhost:8080/newsl/api/v1/article/save"
+                : "/api/articles/" + formData.get("id");
+            const method = actionType === "add" ? "POST" : "PUT";
+            const token = $.cookie("authTokenNewSL");
+            $.ajax({
+              url: endpoint,
+              type: method,
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+              data: formData,
+              processData: false,
+              contentType: false,
+              success: function (data) {
+                closeAddArticlePopup();
+                Swal.fire({
+                  icon: "success",
+                  title: "Success!",
+                  text: "Article pending approval",
+                });
+                loadArticles();
+              },
+              error: function (xhr, status, error) {
+                console.error("Error saving article:", error);
+                const errorMessage = xhr.responseJSON?.errorMessage;
+                Swal.fire({
+                  icon: "error",
+                  title: "Oops...",
+                  text: `${errorMessage}`,
+                });
+              },
+            });
+          });
+
+        // Function to load articles from API
+        function loadArticles() {
+          const searchTitle = $("#searchTitle").val();
+          const reporterFilter = $("#reporterFilter").val();
+
+          let url = "http://localhost:8080/newsl/api/v1/article";
+          let params = {};
+
+          if (searchTitle) params.title = searchTitle;
+          if (reporterFilter) params.reporter = reporterFilter;
+
+          $.ajax({
+            url: url,
+            type: "GET",
+            data: params,
+            dataType: "json",
+            success: function (data) {
+              const tableBody = $("#articleTableBody");
+              tableBody.empty();
+
+              $.each(data, function (index, article) {
+                console.log(article);
+
+                tableBody.append(`
+          <div class="col-lg-4 bg-black">
+                <div class="position-relative mb-3">
+                  <img
+                    class="img-fluid w-100"
+                    src="${article.coverImage}"
+                    style="object-fit: cover"
+                  />
+                  <div class="bg-white border border-top-0 p-4">
+                    <div class="mb-2">
+                      <a
+                        class="badge badge-primary text-uppercase font-weight-semi-bold p-2 mr-2"
+                        href=""
+                        >Business</a
+                      >
+                      <a class="text-body" href=""
+                        ><small>${article.publishedAt}</small></a
+                      >
+                    </div>
+                    <a
+                      class="h4 d-block mb-3 text-secondary text-uppercase font-weight-bold"
+                      href=""
+                      >${article.title}</a
+                    >
+                    <p class="m-0">
+                      ${article.content}
+                    </p>
+                  </div>
+                  <div
+                    class="d-flex justify-content-between bg-white border border-top-0 p-4"
+                  >
+                    <div class="d-flex align-items-center">
+                      <img
+                        class="rounded-circle mr-2"
+                        src="img/user.jpg"
+                        width="25"
+                        height="25"
+                        alt=""
+                      />
+                      <small>${article.reporter}</small>
+                    </div>
+                    <div class="d-flex align-items-center">
+                      <small class="ml-3"
+                        ><i class="far fa-eye mr-2"></i>${article.viewCount}</small
+                      >
+                      <small class="ml-3"
+                        ><i class="far fa-comment mr-2"></i>123</small
+                      >
+                    </div>
+                  </div>
+                </div>
+              </div>
+        `);
+              });
+
+              // Add event listeners for view, edit, and delete buttons
+              addActionButtonListeners();
+            },
+            error: function (error) {
+              console.error("Error loading articles:", error);
+            },
+          });
+        }
+
+        // Add event listeners to action buttons
+        function addActionButtonListeners() {
+          // View buttons
+          document.querySelectorAll(".view-btn").forEach((button) => {
+            button.addEventListener("click", function () {
+              const articleId = this.getAttribute("data-id");
+              viewArticle(articleId);
+            });
+          });
+
+          // Edit buttons
+          document.querySelectorAll(".edit-btn").forEach((button) => {
+            button.addEventListener("click", function () {
+              const articleId = this.getAttribute("data-id");
+              editArticle(articleId);
+            });
+          });
+
+          // Delete buttons
+          document.querySelectorAll(".delete-btn").forEach((button) => {
+            button.addEventListener("click", function () {
+              const articleId = this.getAttribute("data-id");
+              openDeleteConfirmation(articleId);
+            });
+          });
+        }
+
+        // Function to view article details
+        function viewArticle(articleId) {
+          fetch(`/api/articles/${articleId}`)
+            .then((response) => response.json())
+            .then((article) => {
+              document.getElementById("viewTitle").textContent = article.title;
+              document.getElementById("viewReporter").textContent =
+                article.reporterName;
+
+              const date = new Date(article.createdAt);
+              const formattedDate = date.toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+              });
+              document.getElementById("viewDate").textContent = formattedDate;
+
+              document.getElementById("viewContent").innerHTML =
+                article.content;
+
+              if (article.coverImageUrl) {
+                document.getElementById("viewCoverImage").src =
+                  article.coverImageUrl;
+                document.getElementById("viewCoverImage").style.display =
+                  "block";
+              } else {
+                document.getElementById("viewCoverImage").style.display =
+                  "none";
+              }
+
+              document.getElementById("viewArticlePopup").style.display =
+                "block";
+            })
+            .catch((error) =>
+              console.error("Error fetching article details:", error)
+            );
+        }
+
+        // Function to edit an article
+        function editArticle(articleId) {
+          fetch(`/api/articles/${articleId}`)
+            .then((response) => response.json())
+            .then((article) => {
+              document.getElementById("articleId").value = article.id;
+              document.getElementById("title").value = article.title;
+              document.getElementById("content").value = article.content;
+              document.getElementById("currentCount").textContent =
+                article.content.length;
+
+              // Set the reporter in select2
+              $("#reporter").val(article.reporterId).trigger("change");
+
+              fileSelectedText.textContent = "Current image retained";
+
+              document.getElementById("actionType").value = "update";
+              document.getElementById("popupTitle").textContent =
+                "Update Article";
+
+              addArticlePopup.style.display = "block";
+            })
+            .catch((error) =>
+              console.error("Error fetching article for edit:", error)
+            );
+        }
+
+        // Function to open delete confirmation popup
+        function openDeleteConfirmation(articleId) {
+          const deletePopup = document.getElementById(
+            "deleteConfirmationPopup"
+          );
+          deletePopup.style.display = "block";
+
+          document.getElementById("confirmDeleteBtn").onclick = function () {
+            deleteArticle(articleId);
+          };
+        }
+
+        // Function to delete an article
+        function deleteArticle(articleId) {
+          fetch(`/api/articles/${articleId}`, {
+            method: "DELETE",
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Failed to delete article");
+              }
+
+              document.getElementById("deleteConfirmationPopup").style.display =
+                "none";
+              loadArticles();
+            })
+            .catch((error) => {
+              console.error("Error deleting article:", error);
+              alert("Failed to delete article. Please try again.");
+            });
+        }
+
+        // Add event listeners for search button
+        document
+          .getElementById("searchBtn")
+          .addEventListener("click", loadArticles);
+
+        // Add event listeners for close buttons
+        document
+          .getElementById("closeViewBtn")
+          .addEventListener("click", function () {
+            document.getElementById("viewArticlePopup").style.display = "none";
+          });
+
+        document
+          .getElementById("closeButton")
+          .addEventListener("click", function () {
+            document.getElementById("viewArticlePopup").style.display = "none";
+          });
+
+        document
+          .getElementById("closeDeletePopupBtn")
+          .addEventListener("click", function () {
+            document.getElementById("deleteConfirmationPopup").style.display =
+              "none";
+          });
+
+        // Add click event listener to the add button
+        addBtn.addEventListener("click", openAddArticlePopup);
+
+        // Add click event listener to the close button
+        closeBtn.addEventListener("click", closeAddArticlePopup);
+
+        // Close popups if user clicks outside
+        window.addEventListener("click", function (event) {
+          if (event.target === addArticlePopup) {
+            closeAddArticlePopup();
+          }
+          if (event.target === document.getElementById("viewArticlePopup")) {
+            document.getElementById("viewArticlePopup").style.display = "none";
+          }
+          if (
+            event.target === document.getElementById("deleteConfirmationPopup")
+          ) {
+            document.getElementById("deleteConfirmationPopup").style.display =
+              "none";
+          }
+        });
+
+        // Load articles on page load
+        loadArticles();
+      });
+    </script>
+    <script
+      type="module"
+      src="/components/js/section/ArticleSection.js"
+    ></script>
+  </body>
+</html>

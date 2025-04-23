@@ -5,6 +5,9 @@
     <title>NewSL - Login/Register</title>
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
 
+    <!-- firebase auth -->
+    <script src="/utils/authentication.js" defer type="module"></script>
+
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link
@@ -42,9 +45,7 @@
                 <a class="nav-link text-body small" href="#">Advertise</a>
               </li>
               <li class="nav-item border-right border-secondary">
-                <a class="nav-link text-body small" href="tel:+94768425039"
-                  >Contact</a
-                >
+                <a class="nav-link text-body small" href="#">Contact</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link text-body small" href="#">Login</a>
@@ -97,6 +98,57 @@
             </h1>
           </a>
         </div>
+        <div class="col-lg-8 text-right">
+          <!-- User Profile Section -->
+          <div class="position-relative d-inline-block">
+            <a
+              href="#"
+              id="userProfileToggle"
+              class="text-dark d-flex align-items-center"
+            >
+              <img
+                src=""
+                alt="User"
+                class="rounded-circle mr-2"
+                width="36"
+                height="36"
+              />
+              <span class="font-weight-medium d-none d-md-inline"
+                >John Doe</span
+              >
+              <i class="fas fa-chevron-down ml-2 small"></i>
+            </a>
+            <!-- User Profile Popup -->
+            <div
+              id="userProfilePopup"
+              class="position-absolute bg-white shadow rounded p-3 mt-2"
+              style="right: 0; width: 250px; z-index: 1000; display: none"
+            >
+              <div class="text-center mb-3">
+                <img
+                  src=""
+                  alt="User"
+                  class="rounded-circle mb-2"
+                  width="80"
+                  height="80"
+                />
+                <h6 class="mb-0">John Doe</h6>
+                <p class="text-muted small">john.doe@example.com</p>
+              </div>
+              <div class="border-top pt-2">
+                <a href="profile.html" class="text-dark d-block py-2">
+                  <i class="fas fa-user mr-2"></i> My Profile
+                </a>
+                <a href="settings.html" class="text-dark d-block py-2">
+                  <i class="fas fa-cog mr-2"></i> Settings
+                </a>
+                <a href="logout.html" class="text-danger d-block py-2">
+                  <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <!-- Topbar End -->
@@ -126,20 +178,8 @@
           <div class="navbar-nav mr-auto py-0">
             <a href="index.html" class="nav-item nav-link">Home</a>
             <a href="category.html" class="nav-item nav-link">Category</a>
-            <a href="single.html" class="nav-item nav-link">Single News</a>
-            <div class="nav-item dropdown">
-              <a
-                href="#"
-                class="nav-link dropdown-toggle"
-                data-toggle="dropdown"
-                >Dropdown</a
-              >
-              <div class="dropdown-menu rounded-0 m-0">
-                <a href="#" class="dropdown-item">Menu item 1</a>
-                <a href="#" class="dropdown-item">Menu item 2</a>
-                <a href="#" class="dropdown-item">Menu item 3</a>
-              </div>
-            </div>
+            <a href="/foreign.html" class="nav-item nav-link">Foreign News</a>
+
             <a href="contact.html" class="nav-item nav-link">Contact</a>
           </div>
           <div
@@ -250,7 +290,7 @@
                     <button class="btn btn-social btn-facebook">
                       <i class="fab fa-facebook-f"></i>
                     </button>
-                    <button class="btn btn-social btn-google">
+                    <button id="googlebtn" class="btn btn-social btn-google">
                       <i class="fab fa-google"></i>
                     </button>
                     <button class="btn btn-social btn-twitter">
@@ -620,6 +660,9 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.bundle.min.js"></script>
     <script src="lib/easing/easing.min.js"></script>
     <script src="lib/owlcarousel/owl.carousel.min.js"></script>
+
+    <!-- Contact Javascript File -->
+    <script src="/lib/sweetalert2@11.js"></script>
 
     <!-- Custom Javascript -->
     <script src="/js/login.js"></script>

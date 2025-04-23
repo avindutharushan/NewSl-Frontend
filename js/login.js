@@ -4,6 +4,27 @@
 const API_BASE_URL = "http://localhost:8080/newsl/api/v1/auth";
 const LOCAL_STORAGE_PREFIX = "authTokenNewSL";
 
+$(document).ready(function () {
+  const token = $.cookie(LOCAL_STORAGE_PREFIX);
+  const username = $.cookie("username");
+  if (token) {
+    AuthService.validateUser(token, username)
+      .then((response) => {
+        if (response === true) {
+          window.location.href = "/index.html";
+        } else {
+          $.removeCookie(LOCAL_STORAGE_PREFIX, { path: "/" });
+          $.removeCookie("username", { path: "/" });
+        }
+      })
+      .catch((error) => {
+        console.error("Error during user validation:", error);
+        $.removeCookie(LOCAL_STORAGE_PREFIX, { path: "/" });
+        $.removeCookie("username", { path: "/" });
+      });
+  }
+});
+
 // Utility Functions
 function validateEmail(email) {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -43,6 +64,23 @@ function displayErrors(container, errors) {
 
 // Authentication Service
 const AuthService = {
+  validateUser: function (token, username) {
+    return $.ajax({
+      url: `${API_BASE_URL}/validate?username=${username}`,
+      type: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      success: function (response) {
+        return response;
+      },
+      error: function (xhr, status, error) {
+        console.error("Error during user validation:", error);
+        throw new Error("Failed to validate user");
+      },
+    });
+  },
+
   login(email, password) {
     const payload = { email, password };
 
@@ -147,11 +185,18 @@ document.addEventListener("DOMContentLoaded", function () {
       .done(function (response) {
         if (response.token) {
           $.cookie("username", response.username, { path: "/" });
+          $.cookie("role", response.role, { path: "/" });
           $.cookie(`${LOCAL_STORAGE_PREFIX}`, response.token, {
             path: "/",
             expires: 7,
           });
-          window.location.href = "index.html";
+          if (response.role == "REPORTER") {
+            window.location.href = "/pages/reporterDashbord.html";
+          } else if (response.role == "ADMIN") {
+            window.location.href = "/pages/adminDashbord.html";
+          } else {
+            window.location.href = "index.html";
+          }
         }
       })
       .fail(function () {
@@ -215,9 +260,12 @@ document.addEventListener("DOMContentLoaded", function () {
         UIManager.startOTPTimer(timerElement[0], resendActionElement[0]);
       })
       .fail((xhr) => {
-        const errorMessage =
-          xhr.responseJSON?.message || "OTP request failed. Please try again.";
-        alert(errorMessage);
+        const errorMessage = xhr.responseJSON?.errorMessage;
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: `${errorMessage}`,
+        });
       });
   });
 
@@ -244,12 +292,18 @@ document.addEventListener("DOMContentLoaded", function () {
       "role",
       $('input[name="user-type"]:checked').val()?.toUpperCase()
     );
+    const profilePictureInput = document.getElementById("profile-picture");
+    if (profilePictureInput.files.length > 0) {
+      formData.append("profilePicture", profilePictureInput.files[0]);
+    }
     formData.append("otp", otp);
 
     AuthService.register(formData)
       .done((response) => {
         if (response.token) {
           $.cookie("username", response.username, { path: "/" });
+          $.cookie("role", response.role, { path: "/" });
+
           $.cookie(`${LOCAL_STORAGE_PREFIX}`, response.token, {
             path: "/",
             expires: 7,
@@ -258,9 +312,12 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       })
       .fail((xhr) => {
-        const errorMessage =
-          xhr.responseJSON?.message || "Registration failed. Please try again.";
-        alert(errorMessage);
+        const errorMessage = xhr.responseJSON?.errorMessage;
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: `${errorMessage}`,
+        });
       });
   });
 
@@ -297,9 +354,12 @@ document.addEventListener("DOMContentLoaded", function () {
         UIManager.startOTPTimer(timerElement[0], resendActionElement[0]);
       })
       .fail((xhr) => {
-        const errorMessage =
-          xhr.responseJSON?.message || "OTP request failed. Please try again.";
-        alert(errorMessage);
+        const errorMessage = xhr.responseJSON?.errorMessage;
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: `${errorMessage}`,
+        });
       });
   });
 });

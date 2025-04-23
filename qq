@@ -1,0 +1,180 @@
+$(document).ready(function () {
+  console.log("Document is ready");
+
+  const bidId = new URLSearchParams(window.location.search).get("bidId");
+  const merchantSecret = "ODUwMzU3Mzc2MjM0MDQyNzQwNzI2NjM3NjM3NzYyNjM5OTQ1OTY3"; // Replace with your Merchant Secret
+  const merchantId = "1230071"; // Replace with your Merchant ID
+
+  if (bidId) {
+    console.log("Fetching bid details for bidId:", bidId);
+    $.ajax({
+      type: "GET",
+      url: `http://localhost:8080/api/v1/bids/${bidId}`,
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("token"), // Assuming you store the token in localStorage
+      },
+      success: function (response) {
+        console.log("Bid details fetched successfully:", response);
+        const bid = response.data; // Ensure you access the data property
+        $("#spiceOwnerEmail").val(bid.spiceOwnerEmail); // Assign spiceOwnerEmail to a hidden input field
+        $("#bidImage").attr(
+          "src",
+          bid.imageURL
+            ? `data:image/png;base64,${bid.imageURL}`
+            : "assets/Images/noImage.png"
+        );
+        $("#amount").val(bid.bidAmount);
+        $("#listingName").val(bid.listingName);
+        $("#listingDescription").val(bid.listingDescription);
+        $("#status").val(bid.status);
+        $("#bidTime").val(new Date(bid.bidTime).toLocaleString());
+        $("#spiceId").val(bid.listingId); // Store the listingId as spiceId in a hidden input field
+      },
+      error: function (error) {
+        console.error("Error fetching bid details:", error);
+        Swal.fire(
+          "Failed to load bid details: " +
+            (error.responseJSON?.message || "Unknown error")
+        );
+      },
+    });
+  }
+
+  // Function to generate the hash value
+  function generateHash(orderId, amount, currency, merchantSecret) {
+    const hashedSecret = CryptoJS.MD5(merchantSecret).toString().toUpperCase();
+    const amountFormatted = parseFloat(amount).toFixed(2); // Ensure two decimal places
+    const rawHash =
+      merchantId + orderId + amountFormatted + currency + hashedSecret;
+    return CryptoJS.MD5(rawHash).toString().toUpperCase();
+  }
+
+  $("#payhere-payment").on("click", function () {
+    console.log("Pay button clicked");
+
+    const amount = $("#amount").val();
+    const currency = "LKR";
+    const orderId = bidId;
+    const buyerEmail = $("#buyerEmail").val();
+    const spiceOwnerEmail = $("#spiceOwnerEmail").val(); // Get the spice owner email from the hidden input field
+
+    // Validate required fields
+    if (!amount || isNaN(amount) || parseFloat(amount) <= 0) {
+      Swal.fire("Invalid amount. Please enter a valid amount.");
+      return;
+    }
+
+    if (!buyerEmail || !buyerEmail.includes("@")) {
+      Swal.fire("Invalid email. Please enter a valid email address.");
+      return;
+    }
+    const hash = generateHash(orderId, amount, currency, merchantSecret);
+    // Prepare the payment object
+    const payment = {
+      sandbox: true,
+      merchant_id: merchantId,
+      return_url: "http://localhost:8080/api/v1/bids",
+      cancel_url: "http://localhost:8080/api/v1/bids",
+      notify_url: "http://localhost:8080/api/v1/payment/notify",
+      order_id: orderId,
+      items: $("#listingName").val(),
+      amount: amount,
+      currency: currency,
+      first_name: "Buyer",
+      last_name: "Name",
+      email: buyerEmail,
+      owner: spiceOwnerEmail,
+      phone: "0771234567",
+      address: "No. 1, Galle Road",
+      city: "Colombo",
+      country: "Sri Lanka",
+      hash: hash, // Add the generated hash value here
+    };
+
+    console.log("Starting PayHere payment with data:", payment);
+
+    // Initialize PayHere event handlers
+    payhere.onCompleted = function (orderId) {
+      console.log("Payment completed successfully for orderId:", orderId);
+      Swal.fire("Payment completed successfully!");
+
+      // Call the backend to verify the payment status
+      $.ajax({
+        type: "POST",
+        url: "http://localhost:8080/api/v1/payment/notify",
+        data: { order_id: orderId },
+        success: function (response) {
+          if (response.code === 200) {
+            Swal.fire("Payment completed successfully!");
+            window.location.href = "my_bids.html";
+          } else {
+            Swal.fire("Payment verification failed: " + response.message);
+          }
+        },
+        error: function (error) {
+          console.error("Error verifying payment:", error);
+          Swal.fire(
+            "Failed to verify payment: " +
+              (error.responseJSON?.message || "Unknown error")
+          );
+        },
+      });
+
+      // Call the confirm method to update the database
+      $.ajax({
+        type: "POST",
+        url: "http://localhost:8080/api/v1/payment/confirm",
+        data: JSON.stringify({
+          paymentMethodId: "PAYHERE",
+          bidId: bidId,
+          spiceId: $("#spiceId").val(),
+          amount: $("#amount").val(),
+          spiceOwnerEmail: $("#spiceOwnerEmail").val(),
+          buyerEmail: buyerEmail,
+          spiceName: $("#listingName").val(),
+        }),
+        contentType: "application/json",
+        success: function (response) {
+          console.log("Payment confirmed successfully:", response);
+          Swal.fire("Payment confirmed and database updated successfully!");
+          window.location.href = "my_bids.html";
+        },
+        error: function (error) {
+          console.error("Error confirming payment:", error);
+          Swal.fire(
+            "Failed to confirm payment: " +
+              (error.responseJSON?.message || "Unknown error")
+          );
+        },
+      });
+    };
+
+    payhere.onDismissed = function () {
+      console.log("Payment dismissed");
+      Swal.fire("Payment was dismissed");
+    };
+
+    payhere.onError = function (error) {
+      console.error("Payment error:", error);
+      Swal.fire("Payment failed: " + error.message);
+    };
+
+    // Start the payment
+    payhere.startPayment(payment);
+  });
+});
+function confirmLogout() {
+  Swal.fire({
+    title: "Are you sure?",
+    text: "You won't be able to revert this!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#0084ff",
+    cancelButtonColor: "#ff0000",
+    confirmButtonText: "Yes, logout!",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location.href = "login.html";
+    }
+  });
+}

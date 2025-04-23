@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Premium Plans - Choose Your Subscription</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      body {
+        background-color: #f8f9fa;
+        color: #333;
+        line-height: 1.6;
+      }
+
+      header {
+        background-color: #4a6cf7;
+        color: white;
+        text-align: center;
+        padding: 2rem 0;
+        margin-bottom: 3rem;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+      }
+
+      .subtitle {
+        font-size: 1.2rem;
+        opacity: 0.9;
+      }
+
+      .plans-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 30px;
+        margin-bottom: 4rem;
+      }
+
+      .plan-card {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        width: 320px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .plan-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+      }
+
+      .plan-header {
+        padding: 25px 20px;
+        text-align: center;
+        border-bottom: 1px solid #eee;
+      }
+
+      .plan-name {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+        color: #333;
+      }
+
+      .free-plan .plan-header {
+        background-color: #e9ecef;
+      }
+
+      .monthly-plan .plan-header {
+        background-color: #4a6cf7;
+        color: white;
+      }
+
+      .yearly-plan .plan-header {
+        background-color: #2f3e9e;
+        color: white;
+      }
+
+      .price {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin: 15px 0;
+      }
+
+      .price-period {
+        font-size: 1rem;
+        opacity: 0.7;
+      }
+
+      .save-badge {
+        background-color: #28a745;
+        color: white;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        margin-top: 10px;
+        display: inline-block;
+      }
+
+      .plan-features {
+        padding: 20px;
+      }
+
+      .feature-list {
+        list-style: none;
+        margin-bottom: 25px;
+      }
+
+      .feature-list li {
+        padding: 10px 0;
+        display: flex;
+        align-items: center;
+      }
+
+      .feature-list li:not(:last-child) {
+        border-bottom: 1px solid #f0f0f0;
+      }
+
+      .feature-icon {
+        margin-right: 10px;
+        color: #4a6cf7;
+        font-weight: bold;
+      }
+
+      .yearly-plan .feature-icon {
+        color: #2f3e9e;
+      }
+
+      .btn {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        text-align: center;
+        border-radius: 5px;
+        font-weight: bold;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+      }
+
+      .btn-free {
+        background-color: #e9ecef;
+        color: #495057;
+        border: 1px solid #ced4da;
+      }
+
+      .btn-free:hover {
+        background-color: #dee2e6;
+      }
+
+      .btn-monthly {
+        background-color: #4a6cf7;
+        color: white;
+        border: none;
+      }
+
+      .btn-monthly:hover {
+        background-color: #3854d1;
+      }
+
+      .btn-yearly {
+        background-color: #2f3e9e;
+        color: white;
+        border: none;
+      }
+
+      .btn-yearly:hover {
+        background-color: #252f6e;
+      }
+
+      .comparison-section {
+        background-color: white;
+        padding: 3rem 0;
+        border-top: 1px solid #eee;
+      }
+
+      .section-title {
+        text-align: center;
+        margin-bottom: 2rem;
+        font-size: 2rem;
+      }
+
+      .faq-section {
+        padding: 3rem 0;
+      }
+
+      .faq-item {
+        margin-bottom: 1.5rem;
+      }
+
+      .faq-question {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #444;
+      }
+
+      .faq-answer {
+        color: #666;
+      }
+
+      footer {
+        background-color: #333;
+        color: white;
+        text-align: center;
+        padding: 2rem 0;
+        margin-top: 3rem;
+      }
+
+      .popular-badge {
+        position: absolute;
+        top: 15px;
+        right: -30px;
+        background-color: #ff6b6b;
+        color: white;
+        transform: rotate(45deg);
+        padding: 8px 35px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        z-index: 1;
+      }
+
+      .plan-card {
+        position: relative;
+      }
+
+      .yearly-plan {
+        position: relative;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <h1>Choose Your Premium Plan</h1>
+        <p class="subtitle">Select the perfect plan that suits your needs</p>
+      </div>
+    </header>
+
+    <div class="container">
+      <div class="plans-container">
+        <!-- Free Plan -->
+        <div class="plan-card free-plan">
+          <div class="plan-header">
+            <h2 class="plan-name">Basic Free Plan</h2>
+            <div class="price">$0</div>
+            <div class="price-period">Forever</div>
+          </div>
+          <div class="plan-features">
+            <ul class="feature-list">
+              <li>
+                <span class="feature-icon">✓</span> Limited access to content
+              </li>
+              <li><span class="feature-icon">✓</span> Basic features</li>
+              <li>
+                <span class="feature-icon">✓</span> Ad-supported experience
+              </li>
+              <li><span class="feature-icon">✓</span> Standard quality</li>
+              <li><span class="feature-icon">✓</span> Community support</li>
+              <li><span class="feature-icon">✗</span> Premium features</li>
+              <li><span class="feature-icon">✗</span> Ad-free experience</li>
+            </ul>
+            <a href="/index.html" class="btn btn-free">Get Started</a>
+          </div>
+        </div>
+
+        <!-- Monthly Plan -->
+        <div class="plan-card monthly-plan">
+          <div class="popular-badge">POPULAR</div>
+          <div class="plan-header">
+            <h2 class="plan-name">One Month Premium</h2>
+            <div class="price">$9.99</div>
+            <div class="price-period">per month</div>
+          </div>
+          <div class="plan-features">
+            <ul class="feature-list">
+              <li>
+                <span class="feature-icon">✓</span> Full access to all content
+              </li>
+              <li><span class="feature-icon">✓</span> Premium features</li>
+              <li><span class="feature-icon">✓</span> Ad-free experience</li>
+              <li><span class="feature-icon">✓</span> HD quality</li>
+              <li><span class="feature-icon">✓</span> Priority support</li>
+              <li>
+                <span class="feature-icon">✓</span> Download for offline use
+              </li>
+              <li><span class="feature-icon">✓</span> Cancel anytime</li>
+            </ul>
+            <a id="premium-month" class="btn btn-monthly">Subscribe Now</a>
+          </div>
+        </div>
+
+        <!-- Yearly Plan -->
+        <div class="plan-card yearly-plan">
+          <div class="plan-header">
+            <h2 class="plan-name">One Year Premium</h2>
+            <div class="price">$89.99</div>
+            <div class="price-period">per year</div>
+            <div class="save-badge">Save 25%</div>
+          </div>
+          <div class="plan-features">
+            <ul class="feature-list">
+              <li>
+                <span class="feature-icon">✓</span> Everything in Monthly Plan
+              </li>
+              <li>
+                <span class="feature-icon">✓</span> Full access to all content
+              </li>
+              <li><span class="feature-icon">✓</span> Premium features</li>
+              <li><span class="feature-icon">✓</span> Ad-free experience</li>
+
+              <li><span class="feature-icon">✓</span> VIP priority support</li>
+              <li>
+                <span class="feature-icon">✓</span> Exclusive yearly subscriber
+                benefits
+              </li>
+            </ul>
+            <a id="premium-year" class="btn btn-yearly"
+              >Best Value - Subscribe</a
+            >
+          </div>
+        </div>
+      </div>
+
+      <div class="comparison-section">
+        <div class="container">
+          <h2 class="section-title">Why Go Premium?</h2>
+          <div class="benefits">
+            <div class="benefits-grid">
+              <div class="benefit">
+                <h3>Premium Content Access</h3>
+                <p>
+                  Get unlimited access to all our premium content and new
+                  releases as soon as they're available.
+                </p>
+              </div>
+              <div class="benefit">
+                <h3>Ad-Free Experience</h3>
+                <p>
+                  Enjoy a seamless, uninterrupted experience with no
+                  advertisements.
+                </p>
+              </div>
+              <div class="benefit">
+                <h3>Better Quality</h3>
+                <p>
+                  Experience higher quality content, with HD and 4K options
+                  available for annual subscribers.
+                </p>
+              </div>
+              <div class="benefit">
+                <h3>Priority Support</h3>
+                <p>
+                  Get help when you need it with our dedicated support team
+                  ready to assist premium members.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-section">
+        <div class="container">
+          <h2 class="section-title">Frequently Asked Questions</h2>
+          <div class="faq-item">
+            <div class="faq-question">Can I switch plans anytime?</div>
+            <div class="faq-answer">
+              Yes, you can upgrade or downgrade your plan at any time. If you
+              upgrade, the new features will be available immediately. If you
+              downgrade, the changes will take effect at the end of your current
+              billing cycle.
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-question">
+              Is there a free trial for premium plans?
+            </div>
+            <div class="faq-answer">
+              Yes, we offer a 7-day free trial for new premium subscribers. You
+              can cancel anytime during the trial period without being charged.
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-question">How do I cancel my subscription?</div>
+            <div class="faq-answer">
+              You can cancel your subscription at any time from your account
+              settings. Your premium access will continue until the end of your
+              current billing period.
+            </div>
+          </div>
+          <div class="faq-item">
+            <div class="faq-question">What payment methods do you accept?</div>
+            <div class="faq-answer">
+              We accept all major credit cards, PayPal, and select regional
+              payment methods. All transactions are secure and encrypted.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <div class="container">
+        <p>© 2025 Premium Service. All rights reserved.</p>
+        <p>Terms of Service | Privacy Policy | Contact Us</p>
+      </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.3/js/bootstrap.bundle.min.js"></script>
+    <script src="/lib/sweetalert2@11.js"></script>
+    <script src="/js/payment.js"></script>
+    <script src="https://www.payhere.lk/lib/payhere.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  </body>
+</html>
